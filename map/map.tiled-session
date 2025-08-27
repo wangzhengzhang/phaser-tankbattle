@@ -1,0 +1,93 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map.tmj": {
+            "scale": 0.855,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 479.53216374269005,
+                "y": 154.3859649122807
+            }
+        },
+        "map.tmj#tileset_water": {
+            "scaleInDock": 1
+        },
+        "map.tmj#tilesetall": {
+            "scaleInDock": 1
+        },
+        "map.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 697.3333333333333,
+                "y": 476.6666666666667
+            }
+        },
+        "map.tmx#tileset_base": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tileset_enemyspawn": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tileset_playerspawn": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tileset_steelwall": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tileset_tree": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tileset_wall": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map.tmx#tileset_water": {
+            "scaleInDock": 1
+        },
+        "map.tmx#tilesetall": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map.tmx#无标题": {
+            "scaleInEditor": 1
+        },
+        "tileset_wall.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "I:/code/web/game/test-tiledmap/map",
+    "last.imagePath": "I:/code/web/game/test-tiledmap/map",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "map.tmx"
+    ],
+    "project": "map.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "map.tmx",
+        "map.tmj",
+        "tileset_wall.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
+}

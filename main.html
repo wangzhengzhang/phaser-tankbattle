@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坦克大战</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-controls">
+            <button id="startBtn" class="control-btn" onclick="startGame()" disabled>开始</button>
+            <button id="pauseBtn" class="control-btn" onclick="togglePause()" disabled>暂停</button>
+            <button id="restartBtn" class="control-btn" onclick="restartGame()" disabled>重新开始</button>
+        </div>
+        
+        <div class="game-info">
+            <div class="info-panel">
+                <div class="score">关卡: <span id="level">1</span> / 10</div>
+                <div class="lives">生命: <span id="lives">3</span></div>
+                <div class="enemies">敌人: <span id="enemies">0</span></div>
+                <div class="score">得分: <span id="score">0</span></div>
+                <div class="time">保护时间: <span id="time">1:00</span></div>
+            </div>
+        </div>
+        
+        <div id="gameArea"></div>
+        
+        <div class="game-over" id="gameOver">
+            <h2 id="gameOverTitle">游戏结束</h2>
+            <p>最终得分: <span id="finalScore">0</span></p>
+            <button class="restart-btn" onclick="startGame()">重新开始</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>游戏说明</h3>
+            <p>
+                <strong>目标：</strong>保护基地，消灭所有敌方坦克！<br>
+                <strong>操作：</strong><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 移动，<kbd>空格</kbd> 停止移动<br><kbd>A键</kbd> 发射炮弹<br>
+                <strong>地形：</strong><br>
+                🧱 砖墙：可被子弹摧毁<br>
+                🛡️ 钢墙：无法摧毁<br>
+                🌊 水域：坦克无法通过，子弹可以穿过<br>
+                🌲 森林：坦克可通过，子弹无法穿过，提供掩护<br>
+                <strong>胜利条件：</strong>消灭所有敌人或保护基地60秒<br>
+                <strong>失败条件：</strong>生命值为0或基地被摧毁
+            </p>
+        </div>
+    </div>
+
+    <!-- <script src="phaser.min.js"></script> -->
+    <!-- <script src="phaser-module.js"></script> -->
+    <!-- <script src="resource.js"></script>
+    <script src="loader_scene.js"></script> -->
+    <!-- <script src="game.js"></script>  -->
+</body>
+</html>

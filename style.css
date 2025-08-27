@@ -1,0 +1,186 @@
+/* 坦克大战游戏样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #2c2c2c;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #fff;
+}
+
+.game-container {
+    text-align: center;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.game-controls {
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 10px;
+    min-width: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover:not(:disabled) {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+.control-btn.active {
+    background: #FF9800;
+}
+
+.game-info {
+    margin-bottom: 20px;
+}
+
+.info-panel {
+    display: flex;
+    justify-content: space-around;
+    background: #333;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #555;
+}
+
+.info-panel div {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.info-panel .score {
+    color: #4CAF50;
+}
+
+.info-panel .lives {
+    color: #f44336;
+}
+
+.info-panel .enemies {
+    color: #FF9800;
+}
+
+.info-panel .time {
+    color: #9C27B0;
+}
+
+#gameArea {
+    border: 3px solid #4CAF50;
+    border-radius: 8px;
+    background: #000;
+    display: inline-block;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+    border: 3px solid #4CAF50;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+}
+
+.game-over h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #4CAF50;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.game-over p {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.restart-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.restart-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* 像素艺术效果 */
+canvas {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* 游戏说明 */
+.instructions {
+    margin-top: 20px;
+    padding: 15px;
+    background: #333;
+    border-radius: 8px;
+    border: 1px solid #555;
+}
+
+.instructions h3 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.instructions p {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.instructions kbd {
+    background: #555;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    color: #fff;
+}
