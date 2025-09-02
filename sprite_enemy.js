@@ -161,12 +161,6 @@ class EnemyTank extends Phaser.Physics.Arcade.Sprite {
      */
     update() {
         if (!this.isAlive) return; // 已销毁则不更新
-        
-        // // 确保坦克始终面向移动方向
-        // if (this.body.speed > 0) {
-        //     this.angle = Phaser.Math.RadToDeg(Math.atan2(this.body.velocity.y, this.body.velocity.x));
-        // }
-
         if(this.pathExecutor)this.pathExecutor.update();
     }
 
@@ -183,5 +177,12 @@ class EnemyTank extends Phaser.Physics.Arcade.Sprite {
             this.shotTimer.remove();
         }
         super.destroy();
+    }
+
+    // 坦克被击中摧毁，销毁了部分
+    brokenByHit()
+    {
+        game.game.scene.keys["MainScene"].sounds.broken.play();
+        this.destroy();
     }
 }

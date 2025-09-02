@@ -1,0 +1,44 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6151139",
+      "name": "pause circle-fill",
+      "font_class": "pausecircle-fill",
+      "unicode": "e7cb",
+      "unicode_decimal": 59339
+    },
+    {
+      "icon_id": "6151140",
+      "name": "stop circle-fill",
+      "font_class": "stopcircle-fill",
+      "unicode": "e7cc",
+      "unicode_decimal": 59340
+    },
+    {
+      "icon_id": "6151141",
+      "name": "play circle-fill",
+      "font_class": "playcircle-fill",
+      "unicode": "e7cd",
+      "unicode_decimal": 59341
+    },
+    {
+      "icon_id": "6343820",
+      "name": "sync-alt",
+      "font_class": "sync-alt",
+      "unicode": "e86b",
+      "unicode_decimal": 59499
+    },
+    {
+      "icon_id": "6353306",
+      "name": "share",
+      "font_class": "share",
+      "unicode": "e86f",
+      "unicode_decimal": 59503
+    }
+  ]
+}

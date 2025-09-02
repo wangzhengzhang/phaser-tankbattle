@@ -182,30 +182,6 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
-   },
-   "23": {
-    "frame": { "x": 736, "y": 0, "w": 32, "h": 32 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
-    "sourceSize": { "w": 32, "h": 32 },
-    "duration": 100
-   },
-   "24": {
-    "frame": { "x": 768, "y": 0, "w": 32, "h": 32 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
-    "sourceSize": { "w": 32, "h": 32 },
-    "duration": 100
-   },
-   "25": {
-    "frame": { "x": 800, "y": 0, "w": 32, "h": 32 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
-    "sourceSize": { "w": 32, "h": 32 },
-    "duration": 100
    }
  },
  "meta": {
@@ -213,12 +189,12 @@
   "version": "1.x-dev",
   "image": "sprite-tank.png",
   "format": "RGBA8888",
-  "size": { "w": 832, "h": 32 },
+  "size": { "w": 736, "h": 32 },
   "scale": "1",
   "frameTags": [
    { "name": "move", "from": 0, "to": 9, "direction": "forward", "color": "#000000ff" },
-   { "name": "shoot", "from": 10, "to": 17, "direction": "forward", "color": "#000000ff" },
-   { "name": "idle", "from": 18, "to": 25, "direction": "forward", "color": "#000000ff" }
+   { "name": "shoot", "from": 10, "to": 14, "direction": "forward", "color": "#000000ff" },
+   { "name": "idle", "from": 15, "to": 22, "direction": "forward", "color": "#000000ff" }
   ],
   "layers": [
    { "name": "Flattened", "opacity": 255, "blendMode": "normal" }

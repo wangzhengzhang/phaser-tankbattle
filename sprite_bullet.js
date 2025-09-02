@@ -16,8 +16,8 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         if(typeof rotation != 'number' ) throw "bullet must have rotation.";
 
         // 子弹的初始位置设置在tank的外部
-        const dx = resource.window.CELL_SIZE *1.5 * Math.cos(rotation); 
-        const dy = resource.window.CELL_SIZE *1.5 * Math.sin(rotation);
+        const dx = resource.window.CELL_SIZE *0.40 * Math.cos(rotation); 
+        const dy = resource.window.CELL_SIZE *0.40 * Math.sin(rotation);
         x += dx; 
         y += dy;
 

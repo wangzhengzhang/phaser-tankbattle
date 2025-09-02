@@ -30,9 +30,11 @@ class MainScene extends Phaser.Scene {
     this.enemySpawnPoints = []; // 敌人出生地
     this.playerSpawnX = 0; // 玩家出生地
     this.playerSpawnY = 0;
-    this.baseX = 0;        // 基地位置
-    this.baseY = 0;    
+    this.baseX = 0; // 基地位置
+    this.baseY = 0;
     this.enemiesPerLevel = 6; // 每个关增加的敌人数量
+
+    this.createEnemyTimers = []; // 生成敌人的timers
   }
 
   create() {
@@ -60,10 +62,10 @@ class MainScene extends Phaser.Scene {
       }
 
       // 载入aseprite动画
-      this.anims.createFromAseprite('tank');
-      const moveAnim = this.anims.get('move'); 
+      this.anims.createFromAseprite("tank");
+      const moveAnim = this.anims.get("move");
       moveAnim.repeat = -1; // 只有使用这种方式才能有效设置无限循环播放
-
+      this.anims.createFromAseprite("explosion");
 
       // 初始化输入
       if (this.input && this.input.keyboard) {
@@ -124,8 +126,6 @@ class MainScene extends Phaser.Scene {
   // 关卡地图数据
   getLevelMap(level) {
     return this.createLevel1();
-
-
   }
 
   // 清理地图的方法
@@ -146,7 +146,6 @@ class MainScene extends Phaser.Scene {
     this.bulletBackgroundCollisionManager.destroy();
     this.enemyTankBackgroundCollisionManager.destroy();
 
-
     if (this.layer_bg) {
       this.layer_bg.destroy();
       this.layer_bg = null;
@@ -163,7 +162,9 @@ class MainScene extends Phaser.Scene {
 
     this.map = this.make.tilemap({ key: "map" });
 
-    console.log("layers in map:", this.map.layers.map((layer) => layer.name)
+    console.log(
+      "layers in map:",
+      this.map.layers.map((layer) => layer.name)
     );
 
     const tileset1 = this.map.addTilesetImage("tileset_base", "base");
@@ -201,7 +202,6 @@ class MainScene extends Phaser.Scene {
       return;
     }
 
-
     // 获取 player 位置
     // 开启此层的调试模式
     // 手动绘制碰撞边界框
@@ -210,12 +210,10 @@ class MainScene extends Phaser.Scene {
         // 玩家出生地
         this.playerSpawnX = tile.x;
         this.playerSpawnY = tile.y;
-      }
-      else if (tile.index == resource.tileType.ENEMYSPAWN) {
+      } else if (tile.index == resource.tileType.ENEMYSPAWN) {
         // 敌方坦克出生地
         this.enemySpawnPoints.push({ x: tile.x, y: tile.y });
-      }
-      else if(tile.index == resource.tileType.BASE) {
+      } else if (tile.index == resource.tileType.BASE) {
         this.baseX = tile.x;
         this.baseY = tile.y;
       }
@@ -234,35 +232,42 @@ class MainScene extends Phaser.Scene {
       }
     });
 
-    var r = this.layer_bg.setCollision([resource.tileType.WATER, resource.tileType.WALL, resource.tileType.TREE, resource.tileType.STEELWALL,resource.tileType.BASE]);
+    var r = this.layer_bg.setCollision([
+      resource.tileType.WATER,
+      resource.tileType.WALL,
+      resource.tileType.TREE,
+      resource.tileType.STEELWALL,
+      resource.tileType.BASE,
+    ]);
 
     // 设置子弹组与背景的碰撞（钢墙，土墙，树，水）
-    this.bulletBackgroundCollisionManager = new BulletBackgroundCollisionManager(this);
+    this.bulletBackgroundCollisionManager =
+      new BulletBackgroundCollisionManager(this);
 
     // 设置敌方坦克背景的碰撞 （刚强，土墙，树，水）
-    this.enemyTankBackgroundCollisionManager = new EnemyTankBackgroundCollisionManager(this);
+    this.enemyTankBackgroundCollisionManager =
+      new EnemyTankBackgroundCollisionManager(this);
 
     // 初始化路径规划算法A*
-    if(!this.astar)this.astar = new AStarPathfinder(this.layer_bg.layer);
+    if (!this.astar) this.astar = new AStarPathfinder(this.layer_bg.layer);
 
     return this.map;
   }
 
-   // 让角色沿路径移动
-    moveCharacterAlongPath(path) {
-        this.tweens.chain({
-            targets: this.player,
-            tweens: path.map((point, index) => ({
-                x: point.x,
-                y: point.y,
-                duration: 300,
-                ease: 'Linear',
-                // 最后一个点完成后停止
-                onComplete: index === path.length - 1 ? () => {} : null
-            }))
-        });
-    }
-
+  // 让角色沿路径移动
+  moveCharacterAlongPath(path) {
+    this.tweens.chain({
+      targets: this.player,
+      tweens: path.map((point, index) => ({
+        x: point.x,
+        y: point.y,
+        duration: 300,
+        ease: "Linear",
+        // 最后一个点完成后停止
+        onComplete: index === path.length - 1 ? () => {} : null,
+      })),
+    });
+  }
 
   initGame() {
     // 清理现有对象
@@ -272,7 +277,8 @@ class MainScene extends Phaser.Scene {
     game.score = 0;
     game.lives = 3;
     game.enemiesDestroyed = 0;
-    game.levelStartTime = Date.now();
+    game.gameTimer.reset(); // 重置游戏时间计时器，从0开始
+    //game.levelStartTime = this.time.now;
 
     // 创建地图
     this.createMap(game.currentLevel);
@@ -315,7 +321,7 @@ class MainScene extends Phaser.Scene {
     }
     this.player = null;
 
-    if(this.bulletPlayerCollisionManager) {
+    if (this.bulletPlayerCollisionManager) {
       this.bulletPlayerCollisionManager.destroy();
       this.bulletPlayerCollisionManager = null;
     }
@@ -330,7 +336,7 @@ class MainScene extends Phaser.Scene {
     const gridConfig = {
       cellWidth: resource.window.CELL_SIZE, // 单元格宽度
       cellHeight: resource.window.CELL_SIZE, // 单元格高度
-      color: 0x303030, // 网格线颜色
+      color: 0x202020, // 网格线颜色
       alpha: 0.5, // 网格线透明度
       thickness: 1, // 网格线粗细
     };
@@ -385,42 +391,55 @@ class MainScene extends Phaser.Scene {
       (this.playerSpawnX + 0.5) * resource.window.CELL_SIZE,
       (this.playerSpawnY + 0.5) * resource.window.CELL_SIZE
     );
-    this.playerBackgroundCollisionManager = new PlayerBackgroundCollisionManager(this);
+    this.playerBackgroundCollisionManager =
+      new PlayerBackgroundCollisionManager(this);
     this.bulletPlayerCollisionManager = new BulletPlayerCollisionManager(this);
 
     // if(!this.astar)this.astar = new AStarPathfinder(this.layer_bg.layer);
     // var path = this.astar.findPath(this.playerSpawnX * resource.window.CELL_SIZE, this.playerSpawnY * resource.window.CELL_SIZE, ( 3)* resource.window.CELL_SIZE,( 3)* resource.window.CELL_SIZE);
-      
+
     // //开始执行规划的路径
     // if(path)
-    // { 
+    // {
     //   var executor = new PathExecutor(this.player);
     //   executor.setPath(path);
     //   executor.start();
     //   this.player.setPathExecutor(executor);
     // }
+  }
 
-    this.player.play('move');
-}
+  clearCreateEnemyTimers() {
+    for (var i = 0; i < this.createEnemyTimers.length; i++) {
+      clearTimeout(this.createEnemyTimers[i]);
+    }
+    console.log("clear all timers: ",this.createEnemyTimers.length);
+    this.createEnemyTimers = [];
+  }
 
   spawnEnemies() {
     //return;
-    const enemyCount = this.enemiesPerLevel  * game.currentLevel;
+    const enemyCount = this.enemiesPerLevel * game.currentLevel;
     console.log("spawn enemies: " + enemyCount);
 
     for (let i = 0; i < enemyCount; i++) {
-      setTimeout(() => {
+      const  timeoutID = setTimeout(() => {
         if (this.gameState === this.GAME_STATE_PLAYING) {
           this.createEnemy();
+          this.createEnemyTimers = this.createEnemyTimers.filter(item => item !== timeoutID); 
+          //console.log("remove timerid from array: ",timeoutID);
+
         }
-      }, i * (2000 -  100*game.currentLevel)); // 每2秒生成一个敌人
+      }, i * (2000 - 100 * game.currentLevel)); // 每2秒生成一个敌人
+
+      this.createEnemyTimers.push(timeoutID);
     }
   }
 
   fireBullet(owner) {
     const bullet = new Bullet(this, owner.x, owner.y, owner.rotation); // direction,子弹方向与玩家的移动方向一致
     bullet.camp = owner.camp; // 子弹阵营与自己相同，后面处理碰撞时可以忽略己方发出的子弹。
-    this.sounds.shoot.play();
+    if (owner.camp == resource.camp.RED)
+      this.sounds.shoot.play({ seek: 0.5, volume: 0.02 }); // 从第0.5秒开始播放，音量减小
   }
 
   createEnemy() {
@@ -444,15 +463,19 @@ class MainScene extends Phaser.Scene {
     const enemy = new EnemyTank(
       this,
       (x + 0.5) * resource.window.CELL_SIZE,
-      (y + 0.5)* resource.window.CELL_SIZE
+      (y + 0.5) * resource.window.CELL_SIZE
     );
 
     // 规划自动行使的路径
-    var path = this.astar.findPath(x * resource.window.CELL_SIZE, y * resource.window.CELL_SIZE, ( this.baseX)* resource.window.CELL_SIZE,( this.baseY - 4)* resource.window.CELL_SIZE);
-      
+    var path = this.astar.findPath(
+      x * resource.window.CELL_SIZE,
+      y * resource.window.CELL_SIZE,
+      this.baseX * resource.window.CELL_SIZE,
+      (this.baseY - 4) * resource.window.CELL_SIZE
+    );
+
     // 开始执行规划的路径
-    if(path)
-    { 
+    if (path) {
       var executor = new PathExecutor(enemy);
       executor.setPath(path);
       enemy.setPathExecutor(executor);
@@ -484,16 +507,17 @@ class MainScene extends Phaser.Scene {
   update(time, delta) {
     // 如果游戏暂停，不执行任何更新逻辑
     if (game.gameState != game.GAME_STATE_PLAYING) return;
-
     if (!this.player) return;
+
+    game.gameTimer.update();    
     this.player.update(time, delta);
 
     //更新时间显示
     game.updateTimeDisplay();
     game.updateUI();
     this.checkLevelComplete();
+    
   }
-
 
   changeEnemyDirection(enemy) {
     const directions = ["up", "down", "left", "right"];
@@ -516,8 +540,8 @@ class MainScene extends Phaser.Scene {
   }
 
   checkLevelComplete() {
-    const currentTime = Date.now();
-    const timeElapsed = currentTime - game.levelStartTime;
+    // const currentTime = this.time.now;
+    // const timeElapsed = currentTime - game.levelStartTime;
 
     // 胜利条件1：摧毁所有敌人
     if (this.enemies.getLength() === 0 && game.score > 0) {
@@ -526,7 +550,7 @@ class MainScene extends Phaser.Scene {
     }
 
     // 胜利条件2：保护基地达到指定时间
-    if (timeElapsed >= game.protectionTime) {
+    if (game.gameTimer.time() >= game.protectionTime) {
       this.levelComplete();
       return;
     }
@@ -544,7 +568,7 @@ class MainScene extends Phaser.Scene {
     console.log("current level complete: " + game.currentLevel);
     if (game.currentLevel >= game.maxLevel) {
       // 游戏全部通关
-      game.gameState = game.GAME_STATE_OVER;// 游戏结束
+      game.gameState = game.GAME_STATE_OVER; // 游戏结束
       game.gameWin();
     } else {
       // 进入下一关

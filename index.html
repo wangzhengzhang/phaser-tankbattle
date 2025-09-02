@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>坦克大战</title>
     <style>
+      @font-face {
+        font-family: "iconfont";
+        src: url("assets/iconfont/iconfont.ttf?t=1756727517214")
+          format("truetype");
+      }
+      .iconfont {
+        font-family: "iconfont" !important;
+        font-size: 26px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #d0d0d0;
+      }
+      .iconfont:hover {
+        color: white;
+        cursor: pointer;
+      }
+
       /* 基础样式重置 */
       * {
         margin: 0;
@@ -124,10 +142,9 @@
       /* 主内容区域（默认隐藏） */
       #main-content {
         flex: 1;
-        
-        
+
         margin: 0 auto;
-        padding: 40px 0;
+        padding: 10px 0;
         display: none;
       }
 
@@ -206,19 +223,19 @@
       // 1. 配置需要加载的JS文件列表（按依赖顺序排列）
       const jsFiles = [
         // 先加载引擎，再加载业务逻辑
-        "phaser.min.js",              // 加载引擎
-        "navmesh_generator.js",       // 加载地图导航网格工具库 
-        "astar_findpath.js",          // 基于Tile网格的路径规划算法
-        "sprite_executor_path.js",    // 基于Tile网格和 physics物理引擎 的路径执行器
-        "resource.js",                // 加载资源
+        "phaser.min.js", // 加载引擎
+        "navmesh_generator.js", // 加载地图导航网格工具库
+        "astar_findpath.js", // 基于Tile网格的路径规划算法
+        "sprite_executor_path.js", // 基于Tile网格和 physics物理引擎 的路径执行器
+        "resource.js", // 加载资源
 
-        "common.js",         // 角色通用函数库
-        "sprite_player.js",  // 玩家
-        "sprite_enemy.js",   // 敌人玩家
-        "sprite_bullet.js",  // 子弹
+        "common.js", // 角色通用函数库
+        "sprite_player.js", // 玩家
+        "sprite_enemy.js", // 敌人玩家
+        "sprite_bullet.js", // 子弹
 
-        "scene_loader.js",   // 等待加载场景
-        "scene_main.js",     // 游戏场景
+        "scene_loader.js", // 等待加载场景
+        "scene_main.js", // 游戏场景
 
         "game.js", // 游戏全局对象(在这里初始化全局game对象)
       ];

@@ -4,3 +4,11 @@
 
 - 地图编辑工具：Tiled  https://www.mapeditor.org/
 - Sprite动画编辑工具：Aseprite  https://www.aseprite.org/
+
+- How to run
+``` cmd
+npm install -g http-server
+git clone https://github.com/wangzhengzhang/phaser-tankbattle.git
+cd phaser-tankbattle
+http-server
+``` 

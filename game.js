@@ -2,28 +2,33 @@
 class Game {
   constructor() {
     this.isShowDebugMode = false;
+    this.gameTimer = new GameTimer();
+    this.levelStartTime = 0;           // 
+
     // CONST VALUE
     // Game State
-    this.GAME_STATE_OVER = 1; // 游戏结束
-    this.GAME_STATE_PLAYING = 2; // 游戏进行
-    this.GAME_STATE_PAUSED = 3; // 游戏暂停
-    this.GAME_STATE_MENU = 4; // 游戏菜单选项,加载完成准备开始。
+    this.GAME_STATE_OVER = 1;           // 游戏结束
+    this.GAME_STATE_PLAYING = 2;        // 游戏进行
+    this.GAME_STATE_PAUSED = 3;         // 游戏暂停
+    this.GAME_STATE_MENU = 4;           // 游戏菜单选项,加载完成准备开始。
     this.GAME_STATE_LEVEL_COMPLETE = 5; // 游戏升级
+    this.GAME_STATE_LOADING = 6;        // 游戏资源加载中
 
     // 游戏配置
     this.GAME_WIDTH = resource.window.CELL_SIZE * resource.window.GRID_WIDTH;
     this.GAME_HEIGHT = resource.window.CELL_SIZE * resource.window.GRID_HEIGHT;
 
     // 游戏状态
-    this.gameState = this.GAME_STATE_MENU; // MENU, PLAYING, PAUSED, GAME_OVER
+    this.gameState = this.GAME_STATE_LOADING; // MENU, PLAYING, PAUSED, GAME_OVER
     this.currentLevel = 1;
     this.maxLevel = 10;
     this.score = 0;
     this.lives = 3;
     this.enemiesDestroyed = 0;
     //this.enemiesPerLevel = 5;
-    this.levelStartTime = 0;
+
     this.protectionTime = 60000; // 60秒保护时间
+
 
     const config = {
       type: Phaser.AUTO,
@@ -51,52 +56,41 @@ class Game {
     this.game = new Phaser.Game(config);
   }
 
+ 
+
   updateButtonStates() {
-    const startBtn = document.getElementById("startBtn");
-    const pauseBtn = document.getElementById("pauseBtn");
-    const restartBtn = document.getElementById("restartBtn");
+    //const startBtn = document.getElementById("controlBtnPause");
+    const pauseBtn = document.getElementById("controlBtnPause");
+    const restartBtn = document.getElementById("controlBtnRestart");
 
     switch (game.gameState) {
       case game.GAME_STATE_OVER:
-        startBtn.disabled = false;
-        startBtn.textContent = "开始";
         pauseBtn.disabled = true;
         restartBtn.disabled = false;
         break;
       case game.GAME_STATE_PLAYING:
-        startBtn.disabled = true;
         pauseBtn.disabled = false;
         restartBtn.disabled = false;
         break;
       case game.GAME_STATE_PAUSED:
-        startBtn.disabled = false;
-        startBtn.textContent = "继续";
-        pauseBtn.disabled = true;
-        restartBtn.disabled = false;
-        break;
-      case game.GAME_STATE_OVER:
-        startBtn.disabled = false;
-        startBtn.textContent = "开始";
         pauseBtn.disabled = true;
         restartBtn.disabled = false;
         break;
       case game.GAME_STATE_MENU:
-        startBtn.disabled = false;
-        startBtn.textContent = "开始";
         pauseBtn.disabled = true;
-        restartBtn.disabled = false;
+        restartBtn.disabled = true;
         break;
+      case game.GAME_STATE_LOADING:
+        pauseBtn.disabled = true;
+        restartBtn.disabled = true;
     }
   }
 
   // 通过当前关卡
   gameSuccess() {
     this.gameState = this.GAME_STATE_LEVEL_COMPLETE;
-    this.showGameOver(
-      "胜利，恭喜通过关卡 [" + this.currentLevel + "]，开始下一关！",
-      true,
-      "开始"
-    );
+    this.game.scene.keys["MainScene"].clearCreateEnemyTimers();
+    this.showGameDialog( "胜利，恭喜通过关卡 [" + this.currentLevel + "]，开始下一关！","游戏得分：" + game.score);
 
     if (this.game.scene.keys["MainScene"].sounds.complete) {
       this.game.scene.keys["MainScene"].sounds.complete.play();
@@ -106,34 +100,47 @@ class Game {
   // 通过所有关卡
   gameWin() {
     this.gameState = this.GAME_STATE_OVER;
-    this.showGameOver("恭喜通关全部关卡！", true,"重新开始");
+    this.game.scene.keys["MainScene"].clearCreateEnemyTimers();
+
+    this.showGameDialog("恭喜通关全部关卡！","游戏得分：" + game.score);
 
     if (this.game.scene.keys["MainScene"].sounds.complete) {
       this.game.scene.keys["MainScene"].sounds.complete.play();
     }
   }
 
+  gameReadyToStart(){
+    this.gameState = this.GAME_STATE_MENU;
+    this.showGameDialog("请点击下面的按钮，开始游戏！", "");
+  }
+
   // 游戏失败，结束
   gameOver() {
     this.gameState = this.GAME_STATE_OVER;
-    this.showGameOver("失败，游戏结束！", false);
+    this.game.scene.keys["MainScene"].clearCreateEnemyTimers();
+    this.showGameDialog("失败，游戏结束！", "游戏得分：" + game.score);
   }
 
-  showGameOver(title, isWin, buttonText) {
-    document.getElementById("gameOverTitle").textContent = title;
-    document.getElementById("finalScore").textContent = this.score;
-    document.getElementById("gameOver").style.display = "block";
-    if (buttonText)
-      document.getElementsByClassName("restart-btn")[0].innerText = buttonText;
+  showGameDialog(title, content) {
+    document.getElementById("gameDialogTitle").textContent = title;
+    document.getElementById("gameDialogContent").textContent = content;
+    document.getElementById("gameDialog").style.display = "block";
+    // if (buttonText)
+    //   document.getElementsByClassName("restart-btn")[0].innerText = buttonText;
 
     this.updateButtonStates();
     this.updateUI();
   }
 
+  hideGameDialog()
+  {
+     document.getElementById("gameDialog").style.display = "none";
+  }
+
   updateUI() {
     document.getElementById("level").textContent = this.currentLevel;
     document.getElementById("lives").textContent = this.lives;
-    if (this.game.scene)
+    if (this.game.scene.keys["MainScene"] && this.game.scene.keys["MainScene"].enemies)
       document.getElementById("enemies").textContent =
         this.game.scene.keys["MainScene"].enemies.countActive(true);
     document.getElementById("score").textContent = this.score;
@@ -141,8 +148,8 @@ class Game {
 
   updateTimeDisplay() {
     if (this.gameState === this.GAME_STATE_PLAYING) {
-      const currentTime = Date.now();
-      const timeElapsed = currentTime - this.levelStartTime;
+      //const currentTime = this.game.scene.keys["MainScene"].time.now;
+      const timeElapsed = this.gameTimer.time(); // 游戏经过时间
       const timeRemaining = Math.max(0, this.protectionTime - timeElapsed);
       const minutes = Math.floor(timeRemaining / 60000);
       const seconds = Math.floor((timeRemaining % 60000) / 1000);
@@ -163,9 +170,7 @@ var game = new Game();
 // 游戏控制函数
 function startGame() {
   try {
-    // if (!game) {
-    //     game = new TankBattleGame();
-    // }
+    game.hideGameDialog();
     var scene = game.game.scene.keys["MainScene"];
 
     if (game.gameState === game.GAME_STATE_MENU) {
@@ -177,13 +182,14 @@ function startGame() {
       console.log("restarting game...");
       game.gameState = game.GAME_STATE_PLAYING;
       scene.physics.resume();
+      game.gameTimer.resume();
       restoreAllInputs(); // 恢复所有输入
     } else if (game.gameState === game.GAME_STATE_LEVEL_COMPLETE) {
       console.log("start next level...");
       game.currentLevel++; // 开始下一关
       game.gameState = game.GAME_STATE_PLAYING;
       scene.initGame();
-      hideGameOverWindow();
+      
     } else if (game.gameState === game.GAME_STATE_OVER) {
       restartGame();
       return;
@@ -227,7 +233,7 @@ function restoreAllInputs() {
   scene.input.enabled = true;
 }
 
-function togglePause() {
+function pauseGame() {
   if (game && game.gameState === game.GAME_STATE_PLAYING) {
     game.gameState = game.GAME_STATE_PAUSED;
     game.game.scene.keys["MainScene"].physics.pause(); // 暂停物理系统
@@ -235,25 +241,25 @@ function togglePause() {
     if (game.sounds && game.sounds.click) {
       game.sounds.click.play();
     }
-  }
 
-  if (game) {
+    game.showGameDialog("请按下面的按钮继续游戏！","");
     game.updateButtonStates();
   }
 }
 
-function hideGameOverWindow() {
-  document.getElementById("gameOver").style.display = "none";
-  //console.log("hideGameOverWindow");
-}
+// function hideGameOverWindow() {
+//   document.getElementById("gameOver").style.display = "none";
+//   //console.log("hideGameOverWindow");
+// }
 
 function restartGame() {
   if (game) {
-    hideGameOverWindow();
+    game.hideGameDialog();
     if (game.sounds && game.sounds.click) {
       game.sounds.click.play();
     }
     var scene = game.game.scene.keys["MainScene"];
+    scene.clearCreateEnemyTimers();
     
     game.currentLevel = 1;
     scene.initGame();
@@ -263,3 +269,15 @@ function restartGame() {
     game.updateButtonStates();
   }
 }
+
+// 监听文档键盘事件
+document.addEventListener('keydown', (event) => {
+    // 绑定Enter快捷键，开始游戏。
+    if(event.key == "Enter")
+    {
+      if(game.gameState != game.GAME_STATE_PLAYING && game.gameState!= game.GAME_STATE_LOADING)
+      {
+        startGame();
+      }
+    }
+});

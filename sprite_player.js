@@ -83,6 +83,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         
         // 初始化输入监听
         this.initInput();
+
+        // 创建尾迹粒子发射器
+        this.trailEmitter = this.scene.add.particles('tail').createEmitter({
+          // 初始设置，会在update中动态修改
+          lifespan: 500,
+          alpha: { start: 1, end: 0 },
+          scale: { start: 0.5, end: 0.1 },
+          blendMode: 'ADD',
+          on: false // 初始不发射
+        });
     }
     
     /**
@@ -122,8 +132,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      */
     initInput() {
         this.cursors = this.scene.input.keyboard.createCursorKeys();
-        this.spacebar = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.AKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        //this.spacebar = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        // this.AKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+                  // 创建WASD键的映射
+        this.wasdKeys = this.scene.input.keyboard.addKeys({
+                w: Phaser.Input.Keyboard.KeyCodes.W,
+                a: Phaser.Input.Keyboard.KeyCodes.A,
+                s: Phaser.Input.Keyboard.KeyCodes.S,
+                d: Phaser.Input.Keyboard.KeyCodes.D,
+                space: Phaser.Input.Keyboard.KeyCodes.SPACE
+            });
     }
 
 
@@ -179,6 +197,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     {
         this.pathExecutor = execotor;
     }
+
+    playAnimation(key)
+    {
+        // 检查是否正在播放 "shoot" 动画
+        if (this.anims.isPlaying ) {
+            if(this.anims.currentAnim.key === key)
+                return;
+            else{
+                this.anims.stop();
+            }
+        }
+        this.play(key);
+    }
     
     /**
      * 更新逻辑（每一帧调用）
@@ -192,6 +223,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.pathExecutor.update();
             return;
         }
+        
 
          
         // if (this.currentPathIndex < this.path.length - 1) {
@@ -210,24 +242,39 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // }
 
         // 2. 执行手动操控
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown || this.wasdKeys.a.isDown) {
             updateSpeed(this, 'left', this.speed);
-        } else if (this.cursors.right.isDown) {
+            playAnimation(this, 'move');
+        } else if (this.cursors.right.isDown || this.wasdKeys.d.isDown) {
             updateSpeed(this, 'right', this.speed);
-        } else if (this.cursors.up.isDown) {
+            playAnimation(this,'move');
+        } else if (this.cursors.up.isDown|| this.wasdKeys.w.isDown) {
             updateSpeed(this, 'up', this.speed);
-        } else if (this.cursors.down.isDown) {
+            playAnimation(this,'move');
+        } else if (this.cursors.down.isDown|| this.wasdKeys.s.isDown) {
             updateSpeed(this, 'down', this.speed);
+            playAnimation(this,'move');
         }
-        else if (this.spacebar.isDown) {// 停止,保持原来的方向
+        else  {// 停止,保持原来的方向
             updateSpeed(this,'',0);
         }
+        updateMoveTail(this,this.trailEmitter);
         
-        if (this.AKey.isDown ) {   // 攻击，发射炮弹
+        // 获取鼠标指针
+        const pointer = this.scene.input.activePointer;
+        if ( this.wasdKeys.space.isDown|| (pointer.isDown && pointer.leftButtonDown()) )  {   // 攻击，发射炮弹,空格键/鼠标左键
             if(time - this.lastShot > this.shotCooldown )
             {
                 this.lastShot = time;
                 this.scene.fireBullet(this);
+                playAnimation(this,"shoot");
+
+                // 监听射击动画播放完成事件
+                this.once('animationcomplete-shoot', function() {
+                    // 当射击动画结束后，自动播放移动动画
+                    playAnimation(this,'move');
+                }, this);
+
             }
         }
 
@@ -262,6 +309,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
         //     this.jump();
         // }
+    }
+
+    // 坦克被击中摧毁
+    brokenByHit()
+    {
+        game.game.scene.keys["MainScene"].sounds.broken.play();
+        super.destroy();
     }
 
     // 发射子弹

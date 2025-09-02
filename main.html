@@ -8,35 +8,37 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="game-controls">
-            <button id="startBtn" class="control-btn" onclick="startGame()" disabled>开始</button>
-            <button id="pauseBtn" class="control-btn" onclick="togglePause()" disabled>暂停</button>
-            <button id="restartBtn" class="control-btn" onclick="restartGame()" disabled>重新开始</button>
-        </div>
         
-        <div class="game-info">
-            <div class="info-panel">
-                <div class="score">关卡: <span id="level">1</span> / 10</div>
-                <div class="lives">生命: <span id="lives">3</span></div>
-                <div class="enemies">敌人: <span id="enemies">0</span></div>
-                <div class="score">得分: <span id="score">0</span></div>
-                <div class="time">保护时间: <span id="time">1:00</span></div>
+        <div class="game-info" style="display:flex;">
+            <div style="width:100px;display:inline-block;">
+                <button onclick="pauseGame()" title="暂停" id="controlBtnPause" class="control-btn iconfont" tabindex="-1">&#xe7cb;</button> <!-- 暂停 -->
+                <button onclick="restartGame()" title="重新开始" id="controlBtnRestart"class="control-btn iconfont" tabindex="-1">&#xe86b;</button><!-- 重新开始 -->
             </div>
+            <div style="display:inline-block;margin: 0 auto;">
+                <div class="info-panel" >
+                    <div class="score">关卡: <span id="level">1</span> / 10</div>
+                    <div class="lives">生命: <span id="lives">3</span></div>
+                    <div class="enemies">敌人: <span id="enemies">0</span></div>
+                    <div class="score">得分: <span id="score">0</span></div>
+                    <div class="time">保护时间: <span id="time">1:00</span></div>
+                </div>
+            </div>
+            <div style="width:100px;display:inline-block;"></div> <!--占位-->
         </div>
         
         <div id="gameArea"></div>
         
-        <div class="game-over" id="gameOver">
-            <h2 id="gameOverTitle">游戏结束</h2>
-            <p>最终得分: <span id="finalScore">0</span></p>
-            <button class="restart-btn" onclick="startGame()">重新开始</button>
+        <div class="game-dialog" id="gameDialog">
+            <h2 id="gameDialogTitle">游戏结束</h2>
+            <span id="gameDialogContent"></span><br/>
+            <button id="gameDialogBtn" class="control-btn " onclick="startGame()"> <i class="iconfont">&#xe7cd;</i> </button>
         </div>
         
         <div class="instructions">
             <h3>游戏说明</h3>
             <p>
                 <strong>目标：</strong>保护基地，消灭所有敌方坦克！<br>
-                <strong>操作：</strong><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 移动，<kbd>空格</kbd> 停止移动<br><kbd>A键</kbd> 发射炮弹<br>
+                <strong>操作：</strong><kbd>↑/W</kbd><kbd>↓/S</kbd><kbd>←/A</kbd><kbd>→/D</kbd> 移动，<kbd>空格/鼠标左键</kbd> 发射炮弹<br>
                 <strong>地形：</strong><br>
                 🧱 砖墙：可被子弹摧毁<br>
                 🛡️ 钢墙：无法摧毁<br>

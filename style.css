@@ -1,8 +1,9 @@
 /* 坦克大战游戏样式 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -18,7 +19,7 @@ body {
 .game-container {
     text-align: center;
     background: #1a1a1a;
-    padding: 20px;
+    padding: 3px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
@@ -27,6 +28,55 @@ body {
     margin-bottom: 20px;
 }
 
+button:disabled{
+  cursor: not-allowed !important; /* 必要时使用 !important 覆盖 */
+  pointer-events: auto;           /* 确保事件未被禁用 */
+  opacity: 0.5;
+}
+
+/* 完全隐藏焦点轮廓 */
+.control-btn:focus {
+  outline: none;
+}
+.control-btn {
+  background: transparent; /* 完全透明背景 */
+  border: 0px solid #333; /* 可选：添加边框以保持可见性 */
+  padding: 0px 0px;
+  width:20px;
+  height:26px;
+  cursor: pointer;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+/* 悬停状态 */
+.control-btn:hover {
+      background: transparent; /* 完全透明背景 */
+  border: 0px solid #333; /* 可选：添加边框以保持可见性 */
+  padding: 0px 0px;
+  width:20px;
+  height:26px;
+  cursor: pointer;
+  margin-left:10px;
+  margin-right:10px;
+    /* transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); */
+}
+
+/* 点击状态 */
+.control-btn:active {
+      background: transparent; /* 完全透明背景 */
+  border: 0px solid #333; /* 可选：添加边框以保持可见性 */
+  padding: 0px 0px;
+  width:20px;
+  height:26px;
+  cursor: pointer;
+  margin-left:10px;
+  margin-right:10px;
+    /* transform: translateY(0);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); */
+}
+/* 
 .control-btn {
     background: #4CAF50;
     color: white;
@@ -58,19 +108,21 @@ body {
 
 .control-btn.active {
     background: #FF9800;
-}
+} */
 
 .game-info {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    background: #333;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #555;
 }
 
 .info-panel {
     display: flex;
     justify-content: space-around;
-    background: #333;
-    padding: 15px;
-    border-radius: 8px;
-    border: 2px solid #555;
+
+
 }
 
 .info-panel div {
@@ -78,6 +130,8 @@ body {
     font-weight: bold;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-left:15px;
+    margin-right:15px;
 }
 
 .info-panel .score {
@@ -104,7 +158,7 @@ body {
     box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
 }
 
-.game-over {
+.game-dialog {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -118,18 +172,23 @@ body {
     box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
 }
 
-.game-over h2 {
+#gameDialogImage{
+        
+}
+
+.game-dialog h2 {
     font-size: 36px;
     margin-bottom: 20px;
     color: #4CAF50;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-.game-over p {
+.game-dialog p {
     font-size: 24px;
     margin-bottom: 20px;
     color: #fff;
 }
+
 
 .restart-btn {
     background: #4CAF50;

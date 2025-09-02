@@ -62,6 +62,7 @@ class LoaderScene extends Phaser.Scene {
       // 加载完成后切换到游戏场景
       this.scene.start("MainScene");
       game.updateButtonStates();
+      game.gameReadyToStart();
     });
 
     // 加载游戏资源
@@ -73,6 +74,8 @@ class LoaderScene extends Phaser.Scene {
     this.load.audio("score", "assets/sounds/score.mp3");
 
     this.load.aseprite('tank', 'assets/images/sprite-tank.png', 'assets/images/sprite-tank.json');
+    this.load.aseprite('explosion', 'assets/images/sprite-explosion.png', 'assets/images/sprite-explosion.json'); // 爆炸特效
+
     this.load.image("enemytank", "assets/images/tank-enemy.png");
     this.load.image("bullet", "assets/images/bullet.png");
     this.load.image("wall", "assets/images/brickwall.png");
@@ -82,6 +85,7 @@ class LoaderScene extends Phaser.Scene {
     this.load.image("base", "assets/images/base.png");
     this.load.image("playerspawn", "assets/images/playerspawn.png");
     this.load.image("enemyspawn", "assets/images/enemyspawn.png");
+    this.load.image("tail", "assets/images/tail.png");
 
     //加载地图数据
     this.load.tilemapTiledJSON("map", "map/map.json");

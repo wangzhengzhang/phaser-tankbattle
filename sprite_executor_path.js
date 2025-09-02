@@ -27,7 +27,7 @@ class PathExecutor{
         // 检查是否到达最后一个点
         if (this.currentPathIndex >= this.path.length - 1) {
             this.sprite.setVelocity(0, 0); // 停止移动
-            console.log('path excutor arrive to end point.');
+            
             this.isComplated = true;
             return;
         }
